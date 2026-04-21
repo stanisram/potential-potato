@@ -2,7 +2,7 @@ import os
 from utils import extract_title
 from block_markdown import markdown_to_html_node # Adjust this import to wherever your markdown parsing logic lives
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath="/"):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     # 1. Read the markdown file
@@ -23,17 +23,21 @@ def generate_page(from_path, template_path, dest_path):
     # 5. Replace placeholders
     final_html = template_content.replace("{{ Title }}", title)
     final_html = final_html.replace("{{ Content }}", html_content)
+    
+    # 6. Replace relative paths with basepath
+    final_html = final_html.replace('href="/', f'href="{basepath}')
+    final_html = final_html.replace('src="/', f'src="{basepath}')
 
-    # 6. Create directories if they don't exist
+    # 7. Create directories if they don't exist
     dest_dir = os.path.dirname(dest_path)
     if dest_dir != "":
         os.makedirs(dest_dir, exist_ok=True)
 
-    # 7. Write the full HTML to the destination file
+    # 8. Write the full HTML to the destination file
     with open(dest_path, "w") as f:
         f.write(final_html)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath="/"):
     """Recursively generate HTML pages from markdown files in content directory."""
     # List all entries in the content directory
     for entry in os.listdir(dir_path_content):
@@ -45,8 +49,8 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
                 # Replace .md with .html
                 html_filename = entry.replace(".md", ".html")
                 dest_path = os.path.join(dest_dir_path, html_filename)
-                generate_page(from_path, template_path, dest_path)
+                generate_page(from_path, template_path, dest_path, basepath)
         elif os.path.isdir(from_path):
             # If it's a directory, recurse into it
             dest_subdir = os.path.join(dest_dir_path, entry)
-            generate_pages_recursive(from_path, template_path, dest_subdir)
+            generate_pages_recursive(from_path, template_path, dest_subdir, basepath)
