@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /home/sutashi17/workspace/personal/potential-potato && python3 -m unittest discover -s src$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
