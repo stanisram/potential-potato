@@ -25,8 +25,8 @@ def generate_page(from_path, template_path, dest_path, basepath="/"):
     final_html = final_html.replace("{{ Content }}", html_content)
     
     # 6. Replace relative paths with basepath
-    final_html = final_html.replace('href="/', f'href="{basepath}')
-    final_html = final_html.replace('src="/', f'src="{basepath}')
+    final_html = final_html.replace('href="/', f'href="{basepath}/')
+    final_html = final_html.replace('src="/', f'src="{basepath}/')
 
     # 7. Create directories if they don't exist
     dest_dir = os.path.dirname(dest_path)
